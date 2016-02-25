@@ -12,15 +12,20 @@ app.get('/sales-per-year', (req, res) => {
   // How many Invoices were there in 2009 and 2011? What are the respective total sales for each of those years?
   //req.query = { filter: { year: '2009,2011' } }
 
-  const filterYears = req.query.filter.year.split(',').map(y => +y);
+  let having = '';
 
-  let having = 'HAVING';
-  
-  filterYears.forEach(y => {
-    having += ` year = "${y}" OR`;
-  });
+  if (req.query.filter) {
+    having = 'HAVING';
+    
+    req.query.filter.year
+      .split(',')
+      .map(y => +y)
+      .forEach(y => {
+        having += ` year = "${y}" OR`;
+      });
 
-  having.substring(0, having.length - 3);
+    having.substring(0, having.length - 3);
+  }
 
   db.all(`
     SELECT count(*) as invoices,
