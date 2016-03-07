@@ -16,7 +16,7 @@ app.get('/sales-per-year', (req, res) => {
 
   if (req.query.filter) {
     having = 'HAVING';
-    
+
     req.query.filter.year
       .split(',')
       .map(y => +y)
@@ -24,7 +24,7 @@ app.get('/sales-per-year', (req, res) => {
         having += ` year = "${y}" OR`;
       });
 
-    having.substring(0, having.length - 3);
+    having = having.substring(0, having.length - 3);
   }
 
   db.all(`
